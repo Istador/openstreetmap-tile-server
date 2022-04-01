@@ -71,10 +71,10 @@ jobs:
       run : docker  volume  create  ${VOLUME}
 
     - name: Import Luxembourg
-      run : docker  run  --rm  -v ${VOLUME}:${MOUNT}  ${IMAGE}:${TAG}  import
+      run : docker  run  --rm  --shm-size=128M  -v ${VOLUME}:${MOUNT}  ${IMAGE}:${TAG}  import
 
     - name: Start web server
-      run : docker  run  --rm  -v ${VOLUME}:${MOUNT}  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
+      run : docker  run  --rm  --shm-size=128M  -v ${VOLUME}:${MOUNT}  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
 
     - name: Sleep
       run : sleep 30
