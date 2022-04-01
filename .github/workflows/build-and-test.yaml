@@ -11,7 +11,7 @@ on:
     - master
 
 env:
-  IMAGE : ${{ github.repository_owner }}/openstreetmap-tile-server
+  IMAGE : ${{github.repository_owner,,}}/openstreetmap-tile-server
   TAG   : ${{ github.sha }}
 
 jobs:
