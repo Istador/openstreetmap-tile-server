@@ -7,7 +7,7 @@ on:
 
 env:
   IMAGE     : overv/openstreetmap-tile-server
-  TAG       : ${GITHUB_REF_NAME//\//-}
+  TAG       : ${{ github.ref_name }}
   VOLUME    : osm-db
   CONTAINER : osm-www
   MOUNT     : /var/lib/postgresql/14/main
