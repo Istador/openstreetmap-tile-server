@@ -68,7 +68,7 @@ c226ca747874fb1307eef853feaf9d8db28cef2b *empty.png'
       uses: actions/download-artifact@v2
       with:
         name: image
-        path: /tmp/image.tar.gz
+        path: /tmp/
 
     - name: Load image
       run : docker  load  --input /tmp/image.tar.gz
