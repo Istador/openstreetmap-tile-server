@@ -51,12 +51,6 @@ jobs:
       VOLUME    : osm-db
       CONTAINER : osm-www
       MOUNT     : /var/lib/postgresql/14/main
-      HASHES    : '61b3d1499d7e5b18c028f7c24e22d627077491cf *000.png
-76c74807d26bcae81658103857453a417050abdc *100.png
-4b03701322d032602762672923efedb24da3f3a0 *101.png
-f40e6783644e9b2acf5dacef68345ad4dddb7c0a *110.png
-8a7154700de9a5be33a73aedcac8571a2aff5243 *111.png
-c226ca747874fb1307eef853feaf9d8db28cef2b *empty.png'
     steps:
 
     - name: Set up Docker Buildx
@@ -95,6 +89,13 @@ c226ca747874fb1307eef853feaf9d8db28cef2b *empty.png'
 
     - name: Verify checksums
       run : echo  "${HASHES}"  |  sha1sum  --check  -
+      env:
+        HASHES    : '61b3d1499d7e5b18c028f7c24e22d627077491cf *000.png
+76c74807d26bcae81658103857453a417050abdc *100.png
+4b03701322d032602762672923efedb24da3f3a0 *101.png
+f40e6783644e9b2acf5dacef68345ad4dddb7c0a *110.png
+8a7154700de9a5be33a73aedcac8571a2aff5243 *111.png
+c226ca747874fb1307eef853feaf9d8db28cef2b *empty.png'
 
     - name: Verify example tile not empty
       run : |
