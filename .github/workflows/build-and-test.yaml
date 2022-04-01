@@ -31,11 +31,17 @@ jobs:
         context    : .
         file       : ./Dockerfile
         tags       : ${{env.IMAGE}}:${{env.TAG}}
-        cache-from : ${{env.IMAGE}}:latest
         outputs    : type=docker,dest=/tmp/image.tar
+        cache-from : type=local,src=/tmp/.buildx-cache
+        cache-to   : type=local,dest=/tmp/.buildx-cache-new,mode=max
       env:
         DOCKER_BUILDKIT   : 1
         BUILDKIT_PROGRESS : tty
+
+    - name: Move cache
+      run : |
+        rm  -rf  /tmp/.buildx-cache
+        mv  /tmp/.buildx-cache-new  /tmp/.buildx-cache
 
     - name: Compress image
       run : gzip  /tmp/image.tar
