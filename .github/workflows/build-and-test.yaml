@@ -33,6 +33,9 @@ jobs:
         tags       : ${{env.IMAGE}}:${{env.TAG}}
         cache-from : ${{env.IMAGE}}
         outputs    : type=docker,dest=/tmp/image.tar
+      env:
+        DOCKER_BUILDKIT   : 1
+        BUILDKIT_PROGRESS : plain
 
     - name: Compress image
       run : gzip  /tmp/image.tar
