@@ -39,8 +39,8 @@ jobs:
         pull       : true
         context    : .
         file       : ./Dockerfile
-        tags       : $IMAGE:$TAG
-        cache-from : $IMAGE
+        tags       : ${{env.IMAGE}}:${{env.TAG}}
+        cache-from : ${{env.IMAGE}}
         outputs    : type=docker,dest=/tmp/image.tar
 
     - name: Compress image
@@ -70,13 +70,13 @@ jobs:
       run : docker  load  --input /tmp/image.tar.gz
 
     - name: Create volume
-      run : docker  volume  create  $VOLUME
+      run : docker  volume  create  ${VOLUME}
 
     - name: Import Luxembourg
-      run : docker  run  --rm  -v $VOLUME:$MOUNT  $IMAGE:$TAG  import
+      run : docker  run  --rm  -v ${VOLUME}:${MOUNT}  ${IMAGE}:${TAG}  import
 
     - name: Start web server
-      run : docker  run  --rm  -v $VOLUME:$MOUNT  -p 80:80  -d  --name $CONTAINER  $IMAGE:$TAG  run
+      run : docker  run  --rm  -v ${VOLUME}:${MOUNT}  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
 
     - name: Sleep
       run : sleep 30
@@ -92,17 +92,17 @@ jobs:
         curl  http://localhost/18/135536/89345.png  --fail  -o example.png
 
     - name: Verify checksums
-      run : echo  "$HASHES"  |  sha1sum  --check  -
+      run : echo  "${HASHES}"  |  sha1sum  --check  -
 
     - name: Verify example tile not empty
       run : |
         ! diff  empty.png  example.png  ||  echo  "ERROR: example.png is empty"
 
     - name: Stop web server
-      run : docker  rm  --force  --volumes  $CONTAINER
+      run : docker  rm  --force  --volumes  ${CONTAINER}
 
     - name: Remove volume
-      run : docker  volume  rm  --force  $VOLUME
+      run : docker  volume  rm  --force  ${VOLUME}
 
     - name: Remove image
-      run : docker  rmi  --force  $IMAGE:$TAG
+      run : docker  rmi  --force  ${IMAGE}:${TAG}
