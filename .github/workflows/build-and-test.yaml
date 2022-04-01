@@ -131,7 +131,7 @@ jobs:
       with:
         pull       : true
         push       : true
-        platforms  : linux/amd64,linux/arm64,linux/386
+        platforms  : linux/amd64,linux/arm64
         context    : .
         file       : ./Dockerfile
         tags       : ${{ steps.meta.outputs.tags }}
