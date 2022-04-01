@@ -31,7 +31,7 @@ jobs:
         context    : .
         file       : ./Dockerfile
         tags       : ${{env.IMAGE}}:${{env.TAG}}
-        cache-from : ${{env.IMAGE}}
+        cache-from : ${{env.IMAGE}}:latest
         outputs    : type=docker,dest=/tmp/image.tar
       env:
         DOCKER_BUILDKIT   : 1
