@@ -43,14 +43,11 @@ jobs:
         rm  -rf  /tmp/.buildx-cache
         mv  /tmp/.buildx-cache-new  /tmp/.buildx-cache
 
-    - name: Compress image
-      run : gzip  /tmp/image.tar
-
     - name: Upload image
       uses: actions/upload-artifact@v2
       with:
         name: image
-        path: /tmp/image.tar.gz
+        path: /tmp/image.tar
 
   test:
     runs-on: ubuntu-latest
@@ -77,7 +74,7 @@ c226ca747874fb1307eef853feaf9d8db28cef2b *empty.png'
         path: /tmp/
 
     - name: Load image
-      run : docker  load  --input /tmp/image.tar.gz
+      run : docker  load  --input /tmp/image.tar
 
     - name: Create volume
       run : docker  volume  create  ${VOLUME}
