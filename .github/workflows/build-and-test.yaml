@@ -95,7 +95,8 @@ jobs:
       run : echo  "$HASHES"  |  sha1sum  --check  -
 
     - name: Verify example tile not empty
-      run : ! diff  empty.png  example.png  ||  echo  "ERROR: example.png is empty"
+      run : |
+        ! diff  empty.png  example.png  ||  echo  "ERROR: example.png is empty"
 
     - name: Stop web server
       run : docker  rm  --force  --volumes  $CONTAINER
