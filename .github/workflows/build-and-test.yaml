@@ -90,7 +90,8 @@ jobs:
         curl  http://localhost/tile/18/135536/89345.png  --fail  -o example.png
 
     - name: Verify checksums
-      run : sha1sum  --check  <<EOF
+      run : |
+        sha1sum  --check  <<EOF
 61b3d1499d7e5b18c028f7c24e22d627077491cf *000.png
 76c74807d26bcae81658103857453a417050abdc *100.png
 4b03701322d032602762672923efedb24da3f3a0 *101.png
