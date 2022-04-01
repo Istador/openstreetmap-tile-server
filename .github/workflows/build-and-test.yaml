@@ -93,13 +93,13 @@ c226ca747874fb1307eef853feaf9d8db28cef2b *empty.png'
 
     - name: Download tiles
       run : |
-        curl  http://localhost/0/0/0.png            --fail  -o 000.png
-        curl  http://localhost/1/0/0.png            --fail  -o 100.png
-        curl  http://localhost/1/0/1.png            --fail  -o 101.png
-        curl  http://localhost/1/1/0.png            --fail  -o 110.png
-        curl  http://localhost/1/1/1.png            --fail  -o 111.png
-        curl  http://localhost/18/138474/85459.png  --fail  -o empty.png
-        curl  http://localhost/18/135536/89345.png  --fail  -o example.png
+        curl  http://localhost/tile/0/0/0.png            --fail  -o 000.png
+        curl  http://localhost/tile/1/0/0.png            --fail  -o 100.png
+        curl  http://localhost/tile/1/0/1.png            --fail  -o 101.png
+        curl  http://localhost/tile/1/1/0.png            --fail  -o 110.png
+        curl  http://localhost/tile/1/1/1.png            --fail  -o 111.png
+        curl  http://localhost/tile/18/138474/85459.png  --fail  -o empty.png
+        curl  http://localhost/tile/18/135536/89345.png  --fail  -o example.png
 
     - name: Verify checksums
       run : echo  "${HASHES}"  |  sha1sum  --check  -
