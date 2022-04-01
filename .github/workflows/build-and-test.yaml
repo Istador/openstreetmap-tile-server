@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE     : overv/openstreetmap-tile-server
-  TAG       : ${{ github.ref_name }}
+  IMAGE : overv/openstreetmap-tile-server
+  TAG   : ${{ github.ref_name }}
 
 jobs:
 
