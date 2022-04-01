@@ -32,8 +32,8 @@ jobs:
         file       : ./Dockerfile
         tags       : ${{env.IMAGE}}:${{env.TAG}}
         outputs    : type=docker,dest=/tmp/image.tar
-        cache-from : type=local,src=/tmp/.buildx-cache
-        cache-to   : type=local,dest=/tmp/.buildx-cache-new,mode=max
+        cache-from : type=gha
+        cache-to   : type=gha,mode=max
       env:
         DOCKER_BUILDKIT   : 1
         BUILDKIT_PROGRESS : tty
