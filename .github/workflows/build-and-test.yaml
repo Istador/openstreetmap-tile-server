@@ -38,11 +38,6 @@ jobs:
         DOCKER_BUILDKIT   : 1
         BUILDKIT_PROGRESS : tty
 
-    - name: Move cache
-      run : |
-        rm  -rf  /tmp/.buildx-cache
-        mv  /tmp/.buildx-cache-new  /tmp/.buildx-cache
-
     - name: Upload image
       uses: actions/upload-artifact@v2
       with:
