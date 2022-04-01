@@ -33,11 +33,6 @@ jobs:
         outputs    : type=docker,dest=/tmp/image.tar
         cache-from : type=gha
         cache-to   : type=gha,mode=max
-        build-args: |
-          progress=tty
-      env:
-        DOCKER_BUILDKIT   : 1
-        BUILDKIT_PROGRESS : tty
 
     - name: Upload image
       uses: actions/upload-artifact@v2
