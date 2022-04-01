@@ -67,17 +67,15 @@ jobs:
     - name: Load image
       run : docker  load  --input /tmp/image.tar
 
-    - name: Create volume
-      run : docker  volume  create  ${VOLUME}
-
     - name: Import Luxembourg
-      run : docker  run  --rm  --shm-size=128M  -v ${VOLUME}:${MOUNT}  ${IMAGE}:${TAG}  import
+      run : |
+        docker  volume  create  ${VOLUME}
+        docker  run  --rm  --shm-size=128M  -v ${VOLUME}:${MOUNT}  ${IMAGE}:${TAG}  import
 
-    - name: Start web server
-      run : docker  run  --rm  --shm-size=128M  -v ${VOLUME}:${MOUNT}  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
-
-    - name: Sleep
-      run : sleep 30
+    - name: Start server
+      run : |
+        docker  run  --rm  --shm-size=128M  -v ${VOLUME}:${MOUNT}  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
+        sleep 30
 
     - name: Download tiles
       run : |
@@ -89,7 +87,7 @@ jobs:
         curl  http://localhost/tile/18/138474/85459.png  --fail  -o empty.png
         curl  http://localhost/tile/18/135536/89345.png  --fail  -o example.png
 
-    - name: Verify checksums
+    - name: Verify tiles
       run : |
         sha1sum  --check  <<EOF
         61b3d1499d7e5b18c028f7c24e22d627077491cf *000.png
@@ -99,16 +97,10 @@ jobs:
         8a7154700de9a5be33a73aedcac8571a2aff5243 *111.png
         c226ca747874fb1307eef853feaf9d8db28cef2b *empty.png
         EOF
-
-    - name: Verify example tile not empty
-      run : |
         ! diff  empty.png  example.png  ||  echo  "ERROR: example.png is empty"
 
-    - name: Stop web server
-      run : docker  rm  --force  --volumes  ${CONTAINER}
-
-    - name: Remove volume
-      run : docker  volume  rm  --force  ${VOLUME}
-
-    - name: Remove image
-      run : docker  rmi  --force  ${IMAGE}:${TAG}
+    - name: Cleanup
+      run : |
+        docker  rm  --force  --volumes  ${CONTAINER}
+        docker  volume  rm  --force  ${VOLUME}
+        docker  rmi  --force  ${IMAGE}:${TAG}
