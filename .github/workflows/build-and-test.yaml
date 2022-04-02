@@ -3,7 +3,7 @@ name: Build and test image
 on:
   push:
     branches:
-    - '**'
+    - 'master'
     tags:
     - 'v*'
   pull_request:
