@@ -185,9 +185,9 @@ RUN   mkdir  -p  /data/style/  \
   &&  chown  -R  renderer:  /home/renderer/src/  \
   &&  mv  /var/lib/postgresql/14/main/             /data/database/  \
   &&  mv  /var/lib/mod_tile/                       /data/tiles/     \
-  &&  ln  -s  /var/lib/postgresql/14/main/             /data/database/  \
-  &&  ln  -s  /var/lib/mod_tile/                       /data/tiles/     \
-  &&  ln  -s  /home/renderer/src/openstreetmap-carto/  /data/style/     \
+  &&  ln  -s  /data/database/  /var/lib/postgresql/14/main/             \
+  &&  ln  -s  /data/tiles/     /var/lib/mod_tile/                       \
+  &&  ln  -s  /data/style/     /home/renderer/src/openstreetmap-carto/  \
   &&  mkdir  -p  /data/database/renderer/  \
   &&  chown  -R  renderer:  /data/database/renderer/  \
 ;
