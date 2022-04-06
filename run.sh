@@ -29,6 +29,8 @@ fi
 
 set -x
 
+ls -lah /data/database/
+
 # if there is no custom style mounted, then use osm-carto
 if [ ! "$(ls -A /data/style/)" ]; then
     mv /home/renderer/src/openstreetmap-carto-backup/* /data/style/
