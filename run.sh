@@ -48,7 +48,7 @@ if [ "$1" == "import" ]; then
     fi
 
     # directory for files that should never be separated from the database
-    mkdir -p /data/database/renderer/
+    mkdir -p /data/database/renderer/tiles/
     chown -R renderer: /data/database/renderer/
 
     # Initialize PostgreSQL

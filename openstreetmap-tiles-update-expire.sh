@@ -34,7 +34,7 @@ TRIM_POLY_FILE="/data/database/renderer/region.poly"
 TRIM_OPTIONS="-d $DBNAME"
 TRIM_REGION_OPTIONS="-p $TRIM_POLY_FILE"
 
-BASE_DIR=/data/tiles
+BASE_DIR=/data/database/renderer/tiles
 LOG_DIR=/var/log/tiles
 WORKOSM_DIR=$BASE_DIR/.osmosis
 
