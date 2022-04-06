@@ -179,13 +179,12 @@ RUN chown -R postgres:postgres /var/lib/postgresql \
 && echo "host all all ::/0 md5" >> /etc/postgresql/14/main/pg_hba.conf
 
 # Create volume directories
-RUN   mkdir  -p  /data/database/renderer/  \
+RUN   mkdir  -p  /data/database/  \
   &&  mkdir  -p  /data/style/  \
   &&  mkdir  -p  /var/lib/postgresql/14/  \
   &&  mkdir  -p  /home/renderer/src/  \
   &&  chown  -R  renderer:  /data/  \
   &&  chown  -R  postgres:  /data/database/  \
-  &&  chown  -R  renderer:  /data/database/renderer/  \
   &&  chown  -R  postgres:  /var/lib/postgresql/  \
   &&  chown  -R  renderer:  /home/renderer/src/  \
   &&  mv  /var/lib/mod_tile/  /data/tiles/  \

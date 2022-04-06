@@ -43,12 +43,13 @@ fi
 if [ "$1" == "import" ]; then
     # Ensure that database directory is in right state
     chown -R postgres: /var/lib/postgresql /data/database/
-    mkdir -p /data/database/renderer/
-    chown -R renderer: /data/database/renderer/
-
     if [ ! -f /data/database/PG_VERSION ]; then
         sudo -u postgres /usr/lib/postgresql/14/bin/pg_ctl -D /data/database/ initdb -o "--locale C.UTF-8"
     fi
+
+    # directory for files that should never be separated from the database
+    mkdir -p /data/database/renderer/
+    chown -R renderer: /data/database/renderer/
 
     # Initialize PostgreSQL
     createPostgresConfig
