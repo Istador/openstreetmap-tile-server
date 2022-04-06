@@ -97,7 +97,7 @@ RUN mkdir -p /home/renderer/src \
 
 ###########################################################################################################
 
-FROM ubuntu:20.04 AS final-base
+FROM ubuntu:20.04 AS final
 
 # Based on
 # https://switch2osm.org/serving-tiles/manually-building-a-tile-server-18-04-lts/
@@ -171,9 +171,6 @@ RUN chmod +x /usr/bin/openstreetmap-tiles-update-expire \
 && ln -s /home/renderer/src/mod_tile/osmosis-db_replag /usr/bin/osmosis-db_replag \
 && echo "* * * * *   renderer    openstreetmap-tiles-update-expire\n" >> /etc/crontab
 
-RUN mkdir /nodes \
-&& chown renderer:renderer /nodes
-
 # Configure PosgtreSQL
 COPY postgresql.custom.conf.tmpl /etc/postgresql/14/main/
 RUN chown -R postgres:postgres /var/lib/postgresql \
@@ -181,9 +178,19 @@ RUN chown -R postgres:postgres /var/lib/postgresql \
 && echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/14/main/pg_hba.conf \
 && echo "host all all ::/0 md5" >> /etc/postgresql/14/main/pg_hba.conf
 
-###########################################################################################################
-
-FROM final-base AS final
+# Create volume directories
+RUN   mkdir  -p  /data/style/  \
+  &&  mkdir  -p  /home/renderer/src/  \
+  &&  chown  -R  renderer:  /data/  \
+  &&  chown  -R  renderer:  /home/renderer/src/  \
+  &&  mv  /var/lib/postgresql/14/main/             /data/database/  \
+  &&  mv  /var/lib/mod_tile/                       /data/tiles/     \
+  &&  ln  -s  /var/lib/postgresql/14/main/             /data/database/  \
+  &&  ln  -s  /var/lib/mod_tile/                       /data/tiles/     \
+  &&  ln  -s  /home/renderer/src/openstreetmap-carto/  /data/style/     \
+  &&  mkdir  -p  /data/database/renderer/  \
+  &&  chown  -R  renderer:  /data/database/renderer/  \
+;
 
 # Install PostGIS
 COPY --from=compiler-postgis postgis_src/postgis-src_3.2.1-1_amd64.deb .
@@ -206,7 +213,6 @@ RUN dpkg -i renderd_1-1_amd64.deb \
 # Install mod_tile
 COPY --from=compiler-modtile-renderd /root/mod_tile/mod-tile_1-1_amd64.deb .
 RUN dpkg -i mod-tile_1-1_amd64.deb \
- && mkdir -p /home/renderer/src/openstreetmap-carto \
  && ldconfig \
  && rm mod-tile_1-1_amd64.deb
 
