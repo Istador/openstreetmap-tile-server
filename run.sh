@@ -30,6 +30,7 @@ fi
 set -x
 
 ls -lah /data/database/
+ls -lah /usr/lib/postgresql/14/
 
 # if there is no custom style mounted, then use osm-carto
 if [ ! "$(ls -A /data/style/)" ]; then
