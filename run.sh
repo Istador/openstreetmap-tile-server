@@ -80,7 +80,7 @@ if [ "$1" == "import" ]; then
         REPLICATION_TIMESTAMP=`osmium fileinfo /data/region.osm.pbf | grep 'osmosis_replication_timestamp=' | cut -b35-44`
 
         # initial setup of osmosis workspace (for consecutive updates)
-        sudo -u renderer openstreetmap-tiles-update-expire $REPLICATION_TIMESTAMP
+        sudo -u renderer openstreetmap-tiles-update-expire.sh $REPLICATION_TIMESTAMP
     fi
 
     # copy polygon file if available

@@ -164,12 +164,12 @@ RUN ln -sf /dev/stdout /var/log/apache2/access.log \
 && ln -sf /dev/stderr /var/log/apache2/error.log
 
 # Copy update scripts
-COPY openstreetmap-tiles-update-expire /usr/bin/
-RUN chmod +x /usr/bin/openstreetmap-tiles-update-expire \
+COPY openstreetmap-tiles-update-expire.sh /usr/bin/
+RUN chmod +x /usr/bin/openstreetmap-tiles-update-expire.sh \
 && mkdir /var/log/tiles \
 && chmod a+rw /var/log/tiles \
 && ln -s /home/renderer/src/mod_tile/osmosis-db_replag /usr/bin/osmosis-db_replag \
-&& echo "* * * * *   renderer    openstreetmap-tiles-update-expire\n" >> /etc/crontab
+&& echo "* * * * *   renderer    openstreetmap-tiles-update-expire.sh\n" >> /etc/crontab
 
 # Configure PosgtreSQL
 COPY postgresql.custom.conf.tmpl /etc/postgresql/14/main/
