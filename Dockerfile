@@ -180,8 +180,10 @@ RUN chown -R postgres:postgres /var/lib/postgresql \
 
 # Create volume directories
 RUN   mkdir  -p  /data/style/  \
+  &&  mkdir  -p  /var/lib/postgresql/14/  \
   &&  mkdir  -p  /home/renderer/src/  \
   &&  chown  -R  renderer:  /data/  \
+  &&  chown  -R  postgres:  /var/lib/postgresql/  \
   &&  chown  -R  renderer:  /home/renderer/src/  \
   &&  mv  /var/lib/postgresql/14/main/             /data/database/  \
   &&  mv  /var/lib/mod_tile/                       /data/tiles/     \
