@@ -50,6 +50,7 @@ if [ "$1" == "import" ]; then
     # directory for files that should never be separated from the database
     mkdir -p /data/database/renderer/tiles/
     chown -R renderer: /data/database/renderer/
+    chmod go+rx /data/database/
 
     # Initialize PostgreSQL
     createPostgresConfig
@@ -77,10 +78,6 @@ if [ "$1" == "import" ]; then
             wget ${WGET_ARGS:-} "$DOWNLOAD_POLY" -O /data/region.poly
         fi
     fi
-
-    sudo ls -lah /data/
-    sudo ls -lah /data/database/
-    sudo ls -lah /data/database/renderer/
 
     if [ "${UPDATES:-}" == "enabled" ] || [ "${UPDATES:-}" == "1" ]; then
         # determine and set osmosis_replication_timestamp (for consecutive updates)
