@@ -124,6 +124,9 @@ if [ "$1" == "import" ]; then
     fi
 
     # Register that data has changed for mod_tile caching purposes
+    sudo ls -lah /data/
+    sudo ls -lah /data/database/
+    sudo ls -lah /data/database/renderer/
     sudo -u renderer touch /data/database/renderer/planet-import-complete
 
     service postgresql stop
