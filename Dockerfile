@@ -179,15 +179,16 @@ RUN chown -R postgres:postgres /var/lib/postgresql \
 && echo "host all all ::/0 md5" >> /etc/postgresql/14/main/pg_hba.conf
 
 # Create volume directories
-RUN   mkdir  -p  /data/style/  \
+RUN   mkdir  -p  /data/database/  \
+  &&  mkdir  -p  /data/style/  \
   &&  mkdir  -p  /home/renderer/src/  \
   &&  chown  -R  renderer:  /data/  \
   &&  chown  -R  renderer:  /home/renderer/src/  \
-  &&  mv  /var/lib/postgresql/14/main/  /data/database/  \
+  &&  mv  /var/lib/postgresql/14/main/  /data/database/postgres/  \
   &&  mv  /var/lib/mod_tile/            /data/tiles/     \
-  &&  ln  -s  /data/database  /var/lib/postgresql/14/main             \
-  &&  ln  -s  /data/style     /home/renderer/src/openstreetmap-carto  \
-  &&  ln  -s  /data/tiles     /var/lib/mod_tile                       \
+  &&  ln  -s  /data/database/postgres  /var/lib/postgresql/14/main             \
+  &&  ln  -s  /data/style              /home/renderer/src/openstreetmap-carto  \
+  &&  ln  -s  /data/tiles              /var/lib/mod_tile                       \
 ;
 
 # Install PostGIS

@@ -40,22 +40,12 @@ if [ ! -f /data/style/mapnik.xml ]; then
     carto ${NAME_MML:-project.mml} > mapnik.xml
 fi
 
-# fix missing symlink
-if [ ! -L /var/lib/postgresql/14/main ] ; then
-    ln -s /data/database /var/lib/postgresql/14/main
-fi
-
 if [ "$1" == "import" ]; then
     # Ensure that database directory is in right state
-    chown -R postgres: /var/lib/postgresql /data/database/
-    if [ ! -f /data/database/PG_VERSION ]; then
-        sudo -u postgres /usr/lib/postgresql/14/bin/pg_ctl -D /data/database/ initdb -o "--locale C.UTF-8"
+    chown -R postgres: /var/lib/postgresql /data/database/postgres/
+    if [ ! -f /data/database/postgres/PG_VERSION ]; then
+        sudo -u postgres /usr/lib/postgresql/14/bin/pg_ctl -D /data/database/postgres/ initdb -o "--locale C.UTF-8"
     fi
-
-    # directory for files that should never be separated from the database
-    mkdir -p /data/database/renderer/tiles/
-    chown -R renderer: /data/database/renderer/
-    chmod go+rx /data/database/
 
     # Initialize PostgreSQL
     createPostgresConfig
@@ -94,13 +84,13 @@ if [ "$1" == "import" ]; then
 
     # copy polygon file if available
     if [ -f /data/region.poly ]; then
-        cp /data/region.poly /data/database/renderer/region.poly
-        chown renderer: /data/database/renderer/region.poly
+        cp /data/region.poly /data/database/region.poly
+        chown renderer: /data/database/region.poly
     fi
 
     # flat-nodes
     if [ "${FLAT_NODES:-}" == "enabled" ] || [ "${FLAT_NODES:-}" == "1" ]; then
-        OSM2PGSQL_EXTRA_ARGS="${OSM2PGSQL_EXTRA_ARGS:-} --flat-nodes /data/database/renderer/flat_nodes.bin"
+        OSM2PGSQL_EXTRA_ARGS="${OSM2PGSQL_EXTRA_ARGS:-} --flat-nodes /data/database/flat_nodes.bin"
     fi
 
     # Import data
@@ -113,9 +103,9 @@ if [ "$1" == "import" ]; then
     ;
 
     # old flat-nodes dir
-    if [ -f /nodes/flat_nodes.bin ] && ! [ -f /data/database/renderer/flat_nodes.bin ]; then
-        mv /nodes/flat_nodes.bin /data/database/renderer/flat_nodes.bin
-        chown renderer: /data/database/renderer/flat_nodes.bin
+    if [ -f /nodes/flat_nodes.bin ] && ! [ -f /data/database/flat_nodes.bin ]; then
+        mv /nodes/flat_nodes.bin /data/database/flat_nodes.bin
+        chown renderer: /data/database/flat_nodes.bin
     fi
 
     # Create indexes
@@ -130,7 +120,7 @@ if [ "$1" == "import" ]; then
     fi
 
     # Register that data has changed for mod_tile caching purposes
-    sudo -u renderer touch /data/database/renderer/planet-import-complete
+    sudo -u renderer touch /data/database/planet-import-complete
 
     service postgresql stop
 
@@ -142,24 +132,27 @@ if [ "$1" == "run" ]; then
     rm -rf /tmp/*
 
     # migrate old files
-    if [ -f /nodes/flat_nodes.bin ] && ! [ -f /data/database/renderer/flat_nodes.bin ]; then
-        mv /nodes/flat_nodes.bin /data/database/renderer/flat_nodes.bin
+    if [ -f /data/database/PG_VERSION ] && ! [ -d /data/database/postgres/ ]; then
+        mkdir /data/database/postgres/
+        mv /data/database/* /data/database/postgres/
     fi
-    if [ -f /data/tiles/data.poly ] && ! [ -f /data/database/renderer/region.poly ]; then
-        mv /data/tiles/data.poly /data/database/renderer/region.poly
+    if [ -f /nodes/flat_nodes.bin ] && ! [ -f /data/database/flat_nodes.bin ]; then
+        mv /nodes/flat_nodes.bin /data/database/flat_nodes.bin
+    fi
+    if [ -f /data/tiles/data.poly ] && ! [ -f /data/database/region.poly ]; then
+        mv /data/tiles/data.poly /data/database/region.poly
     fi
 
     # sync planet-import-complete file
-    if [ -f /data/tiles/planet-import-complete ] && ! [ -f /data/database/renderer/planet-import-complete ]; then
-        cp /data/tiles/planet-import-complete /data/database/renderer/planet-import-complete
+    if [ -f /data/tiles/planet-import-complete ] && ! [ -f /data/database/planet-import-complete ]; then
+        cp /data/tiles/planet-import-complete /data/database/planet-import-complete
     fi
-    if ! [ -f /data/tiles/planet-import-complete ] && [ -f /data/database/renderer/planet-import-complete ]; then
-        cp /data/database/renderer/planet-import-complete /data/tiles/planet-import-complete
+    if ! [ -f /data/tiles/planet-import-complete ] && [ -f /data/database/planet-import-complete ]; then
+        cp /data/database/planet-import-complete /data/tiles/planet-import-complete
     fi
 
     # Fix postgres data privileges
-    chown -R postgres: /var/lib/postgresql/ /data/database/
-    chown -R renderer: /data/database/renderer/
+    chown -R postgres: /var/lib/postgresql/ /data/database/postgres/
 
     # Configure Apache CORS
     if [ "${ALLOW_CORS:-}" == "enabled" ] || [ "${ALLOW_CORS:-}" == "1" ]; then
