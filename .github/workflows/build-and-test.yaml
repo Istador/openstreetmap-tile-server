@@ -56,12 +56,8 @@ jobs:
     -
       name: Start server
       run : |
-        docker  run  --shm-size=128M  -v ${VOLUME}:${MOUNT}  -e UPDATES=enabled  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
+        docker  run  --rm  --shm-size=128M  -v ${VOLUME}:${MOUNT}  -e UPDATES=enabled  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
         sleep 30
-    -
-      name: Show Log
-      run : |
-        docker  logs  --tail 1000  ${CONTAINER}
     -
       name: Download tiles
       run : |

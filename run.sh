@@ -29,9 +29,6 @@ fi
 
 set -x
 
-ls -lah /data/database/
-ls -lah /usr/lib/postgresql/14/
-
 # if there is no custom style mounted, then use osm-carto
 if [ ! "$(ls -A /data/style/)" ]; then
     mv /home/renderer/src/openstreetmap-carto-backup/* /data/style/
@@ -41,6 +38,11 @@ fi
 if [ ! -f /data/style/mapnik.xml ]; then
     cd /data/style/
     carto ${NAME_MML:-project.mml} > mapnik.xml
+fi
+
+# fix missing symlink
+if [ ! -L /data/database ] ; then
+    ln -s /data/database /var/lib/postgresql/14/main
 fi
 
 if [ "$1" == "import" ]; then
