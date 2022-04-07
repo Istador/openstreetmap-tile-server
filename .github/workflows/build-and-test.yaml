@@ -87,7 +87,9 @@ jobs:
         ! diff  empty.png  110.png      ||  (  >&2  echo  "ERROR: 110.png is empty"      &&  exit 1  )
         ! diff  empty.png  111.png      ||  (  >&2  echo  "ERROR: 111.png is empty"      &&  exit 1  )
         ! diff  empty.png  example.png  ||  (  >&2  echo  "ERROR: example.png is empty"  &&  exit 1  )
-        if [ `sha1sum   *.png  |  cut  -d ' '  -f 1  |  sort  |  uniq  |  wc  -l`  !=  7 ] ; then
+        if [ `sha1sum   *.png  |  cut  -d ' '  -f 1  |  sort  |  uniq  |  wc  -l`  ==  7 ] ; then
+          echo  "all tiles are different"
+        else
           >&2  echo  "ERROR: tile checksums are not unique"
           exit 2
         fi
