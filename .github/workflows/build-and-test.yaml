@@ -81,18 +81,15 @@ jobs:
         sha1sum  --check  <<EOF
         c226ca747874fb1307eef853feaf9d8db28cef2b *empty.png
         EOF
-        ! diff  empty.png  000.png      ||  (  >&2  echo  "ERROR: 000.png is empty"      &&  exit 1  )
-        ! diff  empty.png  100.png      ||  (  >&2  echo  "ERROR: 100.png is empty"      &&  exit 1  )
-        ! diff  empty.png  101.png      ||  (  >&2  echo  "ERROR: 101.png is empty"      &&  exit 1  )
-        ! diff  empty.png  110.png      ||  (  >&2  echo  "ERROR: 110.png is empty"      &&  exit 1  )
-        ! diff  empty.png  111.png      ||  (  >&2  echo  "ERROR: 111.png is empty"      &&  exit 1  )
-        ! diff  empty.png  example.png  ||  (  >&2  echo  "ERROR: example.png is empty"  &&  exit 1  )
-        if [ `sha1sum   *.png  |  cut  -d ' '  -f 1  |  sort  |  uniq  |  wc  -l`  ==  7 ] ; then
-          echo  "all tiles are different"
-        else
-          >&2  echo  "ERROR: tile checksums are not unique"
-          exit 2
-        fi
+        tiles=(`ls *.png`)
+        for ((i=0; i<${#tiles[@]}; i++)) ; do
+          for ((j=i+1; j<${#tiles[@]}; j++)) ; do
+            if ( diff  "${tiles[$i]}"  "${tiles[$j]}" ) ; then
+              >&2  echo  "ERROR: ${tiles[$i]} is identical to ${tiles[$j]}"
+              exit 1
+            fi
+          done
+        done
     -
       name: Cleanup
       run : |
