@@ -69,6 +69,12 @@ jobs:
         curl  http://localhost/tile/18/138474/85459.png  --fail  -o empty.png
         curl  http://localhost/tile/18/135536/89345.png  --fail  -o example.png
     -
+      name: Upload tiles
+      uses: actions/upload-artifact@v3
+      with:
+        name: tiles
+        path: *.png
+    -
       name: Verify tiles
       run : |
         sha1sum  *.png
