@@ -83,10 +83,14 @@ jobs:
         EOF
         tiles=(`ls *.png`)
         for ((i=0; i<${#tiles[@]}; i++)) ; do
+          if [ `file  --brief  --mime-type  "${tiles[$i]}"` != 'image/png' ] ; then
+            >&2  echo  "ERROR: ${tiles[$i]} is not a image/png file"
+            exit 1
+          fi
           for ((j=i+1; j<${#tiles[@]}; j++)) ; do
             if ( diff  "${tiles[$i]}"  "${tiles[$j]}" ) ; then
               >&2  echo  "ERROR: ${tiles[$i]} is identical to ${tiles[$j]}"
-              exit 1
+              exit 2
             fi
           done
         done
