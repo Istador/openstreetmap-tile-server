@@ -41,7 +41,7 @@ if [ ! -f /data/style/mapnik.xml ]; then
 fi
 
 # fix missing symlink
-if [ ! -L /data/database ] ; then
+if [ ! -L /var/lib/postgresql/14/main ] ; then
     ln -s /data/database /var/lib/postgresql/14/main
 fi
 
