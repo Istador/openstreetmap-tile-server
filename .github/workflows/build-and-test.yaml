@@ -46,8 +46,8 @@ jobs:
         context    : .
         file       : ./Dockerfile
         tags       : ${{env.IMAGE}}:${{env.TAG}}
-        cache-from : type=gha
-        cache-to   : type=gha,mode=max
+        cache-from : type=gha,scope=${{ github.workflow }}
+        cache-to   : type=gha,scope=${{ github.workflow }},mode=max
     -
       name: Import Luxembourg
       run : |
@@ -149,5 +149,5 @@ jobs:
         file       : ./Dockerfile
         tags       : ${{ steps.meta.outputs.tags }}
         labels     : ${{ steps.meta.outputs.labels }}
-        cache-from : type=gha
-        cache-to   : type=gha,mode=max
+        cache-from : type=gha,scope=${{ github.workflow }}
+        cache-to   : type=gha,scope=${{ github.workflow }},mode=max
