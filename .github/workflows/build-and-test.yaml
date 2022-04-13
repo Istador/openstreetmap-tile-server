@@ -6,10 +6,15 @@ on:
     - master
     - dev
     tags:
-    - 'v*'
+    - 'v*.*.*'
   pull_request:
     branches:
     - master
+  workflow_dispatch:
+    inputs:
+      tag:
+        description : 'Tag to build and deploy'
+        required    : true
 
 # cancel outdated jobs for the same reference
 concurrency:
@@ -30,18 +35,24 @@ jobs:
       MOUNT     : /data/database/
     steps:
     -
+      name: Environment
+      run : |
+        IMAGE=`echo ${{ env.IMAGE }} | tr '[:upper:]' '[:lower:]'`
+        echo  "IMAGE=$IMAGE"  >>$GITHUB_ENV
+        if [ "${{ github.event_name }}" == 'workflow_dispatch' ] ; then
+          echo  "TAG=${{ github.event.inputs.tag }}" >>$GITHUB_ENV
+        fi
+    -
       name: Checkout
       uses: actions/checkout@v3
+      with:
+        ref: ${{ env.TAG }}
     -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v1
     -
       name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-    -
-      name: Environment
-      run : |
-        echo  IMAGE=$(echo ${{ env.IMAGE }} | tr '[:upper:]' '[:lower:]')  >>$GITHUB_ENV
     -
       name: Docker build
       uses: docker/build-push-action@v2
@@ -113,13 +124,21 @@ jobs:
     if: ${{ github.event_name != 'pull_request' }}
     steps:
     -
-      name: Checkout
-      uses: actions/checkout@v3
-    -
       name: Environment
       run : |
-        echo  IMAGE=$(echo ${{ env.IMAGE }} | tr '[:upper:]' '[:lower:]')  >>$GITHUB_ENV
-        echo  DOCKERHUB_IMAGE=$([ "${{ secrets.DOCKERHUB_USERNAME }}" != '' ] && [ "${{ secrets.DOCKERHUB_PASSWORD }}" != "" ] && echo "$IMAGE")  >>$GITHUB_ENV
+        IMAGE=`echo ${{ env.IMAGE }} | tr '[:upper:]' '[:lower:]'`
+        echo  "IMAGE=$IMAGE"  >>$GITHUB_ENV
+        if [ "${{ github.event_name }}" == 'workflow_dispatch' ] ; then
+          echo  "TAG=${{ github.event.inputs.tag }}" >>$GITHUB_ENV
+        fi
+        if [ "${{ secrets.DOCKERHUB_USERNAME }}" != '' ] && [ "${{ secrets.DOCKERHUB_PASSWORD }}" != "" ] ; then
+          echo  "DOCKERHUB_IMAGE=$IMAGE"  >>$GITHUB_ENV
+        fi
+    -
+      name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ env.TAG }}
     -
       name: Docker meta
       id: meta
@@ -134,6 +153,9 @@ jobs:
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
           type=semver,pattern={{major}}
+          type=semver,value=${{env.TAG}},enable=${{ github.event_name == 'workflow_dispatch' }},pattern={{version}}
+          type=semver,value=${{env.TAG}},enable=${{ github.event_name == 'workflow_dispatch' }},pattern={{major}}.{{minor}}
+          type=semver,value=${{env.TAG}},enable=${{ github.event_name == 'workflow_dispatch' }},pattern={{major}}
     -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v1

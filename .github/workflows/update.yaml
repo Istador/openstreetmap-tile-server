@@ -2,6 +2,10 @@ name: Update latest tag
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description : 'Tag to build and deploy'
+        required    : true
   schedule:
   - cron: "*/10 * * * *"
 
