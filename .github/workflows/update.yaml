@@ -1,6 +1,7 @@
 name: Update latest tag
 
 on:
+  workflow_dispatch:
   schedule:
   - cron: "*/10 * * * *"
 
