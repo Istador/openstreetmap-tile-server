@@ -8,7 +8,6 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'workflow_dispatch') || (secrets.UPDATE_LATEST_TAG == 'true') }}
     steps:
     -
       name: Checkout
