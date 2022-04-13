@@ -2,7 +2,7 @@ name: Update latest tag
 
 on:
   schedule:
-    cron: "*/20 * * * *"
+  - cron: "*/20 * * * *"
 
 jobs:
   update:
