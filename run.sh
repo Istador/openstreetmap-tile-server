@@ -42,7 +42,8 @@ fi
 
 if [ "$1" == "import" ]; then
     # Ensure that database directory is in right state
-    mkdir -p -m 0755 /data/database/postgres/
+    mkdir -p /data/database/postgres/
+    chown renderer: /data/database/
     chown -R postgres: /var/lib/postgresql /data/database/postgres/
     if [ ! -f /data/database/postgres/PG_VERSION ]; then
         sudo -u postgres /usr/lib/postgresql/14/bin/pg_ctl -D /data/database/postgres/ initdb -o "--locale C.UTF-8"
