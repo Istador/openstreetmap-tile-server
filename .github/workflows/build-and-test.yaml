@@ -25,10 +25,13 @@ jobs:
   test:
     strategy:
       matrix:
-        platform:
-        - linux/amd64
-        - linux/arm64/v8
-        - linux/arm/v7
+        include:
+        - platform : linux/amd64
+          sleep    : 60
+        - platform : linux/arm64/v8
+          sleep    : 300
+        - platform : linux/arm/v7
+          sleep    : 300
     runs-on: ubuntu-latest
     env:
       VOLUME    : osm-db
@@ -69,7 +72,7 @@ jobs:
       name: Start server
       run : |
         docker  run  --platform ${{ matrix.platform }}  --rm  --shm-size=128M  -v ${VOLUME}:${MOUNT}  -e UPDATES=enabled  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
-        sleep 30
+        sleep ${{ matrix.sleep }}
     -
       name: Download tiles
       run : |
