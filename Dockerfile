@@ -42,6 +42,7 @@ RUN apt-get update \
  apache2 \
  cron \
  dateutils \
+ fonts-hanazono \
  fonts-noto-cjk \
  fonts-noto-hinted \
  fonts-noto-unhinted \
