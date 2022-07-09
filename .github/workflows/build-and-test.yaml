@@ -75,7 +75,7 @@ jobs:
         docker  run  --platform ${{ matrix.platform }}  --shm-size=128M  -v ${VOLUME}:${MOUNT}  -e UPDATES=enabled  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
         sleep ${{ matrix.sleep }}
         docker  logs  ${CONTAINER}
-        docker  exec  --entrypoint=/bin/sh  ${CONTAINER}  -c 'journalctl  -x  --no-tail  --no-pager  -u apache2'
+        docker  exec  ${CONTAINER}  /bin/sh  -c 'journalctl  -x  --no-tail  --no-pager  -u apache2'
     -
       name: Download tiles
       run : |
