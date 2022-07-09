@@ -29,9 +29,9 @@ jobs:
         - platform : linux/amd64
           sleep    : 60
         - platform : linux/arm64/v8
-          sleep    : 120
+          sleep    : 300
         - platform : linux/arm/v7
-          sleep    : 120
+          sleep    : 300
     runs-on: ubuntu-latest
     env:
       VOLUME    : osm-db
@@ -75,6 +75,7 @@ jobs:
         docker  run  --platform ${{ matrix.platform }}  --shm-size=128M  -v ${VOLUME}:${MOUNT}  -e UPDATES=enabled  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
         sleep ${{ matrix.sleep }}
         docker  logs  ${CONTAINER}
+        docker  exec  --entrypoint=/bin/sh  ${CONTAINER}  -c 'journalctl  -x  --no-tail  --no-pager  -u apache2'
     -
       name: Download tiles
       run : |
