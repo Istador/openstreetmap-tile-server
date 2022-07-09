@@ -84,13 +84,15 @@ RUN pip3 install \
 RUN npm install -g carto@0.18.2
 
 # Configure Apache
+ARG TARGETARCH
 RUN echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" >> /etc/apache2/conf-available/mod_tile.conf \
 && echo "LoadModule headers_module /usr/lib/apache2/modules/mod_headers.so" >> /etc/apache2/conf-available/mod_headers.conf \
 && a2enconf mod_tile && a2enconf mod_headers
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 COPY leaflet-demo.html /var/www/html/index.html
 RUN ln -sf /dev/stdout /var/log/apache2/access.log \
-&& ln -sf /dev/stderr /var/log/apache2/error.log
+&& ln -sf /dev/stderr /var/log/apache2/error.log \
+&& if [ "$TARGETARCH" = "arm" ]; then a2dismod mpm_event && a2enmod mpm_event; fi
 
 # Copy update scripts
 COPY openstreetmap-tiles-update-expire.sh /usr/bin/
