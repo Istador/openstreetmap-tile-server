@@ -71,6 +71,7 @@ jobs:
     -
       name: Start server
       run : |
+        docker  run  --platform ${{ matrix.platform }}  --rm  --entrypoint=/bin/sh  ${IMAGE}:${TAG}  apache2ctl  configtest
         docker  run  --platform ${{ matrix.platform }}  --shm-size=128M  -v ${VOLUME}:${MOUNT}  -e UPDATES=enabled  -p 80:80  -d  --name ${CONTAINER}  ${IMAGE}:${TAG}  run
         sleep ${{ matrix.sleep }}
         docker  logs  ${CONTAINER}
